@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-path = "Ablacio.txt"
+#plt.style.use("science")
+
+path = r"cmake-build-debug\Ablacio.txt"
 matrix = []
 z = np.linspace(0, 2, 200)
 t = np.linspace(0, (0.51 * (2 / 200) ** 2) * 200, 200)
@@ -18,10 +20,12 @@ for i in range(len(matrix)):
         matrix[i][j] = float(matrix[i][j])
 
 ax = plt.pcolormesh(Z, T, matrix)
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.set_label("$T$ (ºC)")
 plt.title("Temperatura")
-plt.ylabel("t (s)")
-plt.xlabel("z (cm)")
+plt.ylabel("$t$ (s)")
+plt.xlabel("$z$ (cm)")
 plt.axvline(0.75, color="red")
 plt.axvline(1.25, color="red")
+plt.tight_layout()
 plt.show()
