@@ -1,0 +1,3 @@
+C:/Users/minih/Documents/GitHub/AblacioCardiaca/cmake-build-debug/CMakeFiles/AblacioCardiaca.dir
+C:/Users/minih/Documents/GitHub/AblacioCardiaca/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/minih/Documents/GitHub/AblacioCardiaca/cmake-build-debug/CMakeFiles/rebuild_cache.dir
