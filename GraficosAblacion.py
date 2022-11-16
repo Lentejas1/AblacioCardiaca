@@ -5,8 +5,8 @@ import numpy as np
 
 path = r"cmake-build-debug\Ablacio.txt"
 matrix = []
-z = np.linspace(0, 2, 200)
-t = np.linspace(0, (0.51 * (2 / 200) ** 2) * 200, 200)
+z = np.linspace(0, 2, 100)
+t = np.linspace(0, (0.51 * (2 / 100) ** 2) * 100, 100)
 T, Z = np.meshgrid(t, z)
 
 with open(path, "r") as f:

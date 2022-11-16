@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cmath>
-#define N 200
+#define N 100
 
 using namespace std;
 
