@@ -16,11 +16,11 @@ int main(){
     for (int i = 0; i < N; i++){
         T[i][0] = 1;
         T[0][i] = 1;
-        T[N-1][0] = 1;
+        T[N-1][i] = 1;
     }
 
-
-    for (int i = 1; i + 1 < N; i++) {
+// No sé si poner i = 0 ó i i = 1, ya que con i = 1 no existe el punto T[1][j]
+    for (int i = 0; i + 1 < N; i++) {
         for (int j = 1; j < N; j++) {
             T[i+1][j] = dt / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt + T[i][j];
         }
