@@ -2,25 +2,27 @@
 #include <cstdio>
 #include <cmath>
 #define N 100
-
+#define M 2000
 using namespace std;
 
-double T[N][N];
-double T_0 = 36.5;
-double V = 80/sqrt(2);
-double cond = 0.472, z = 2, S = 0.1, k = 0.56, cv = 3683, rho = 1081, P = S*cond/z* pow(V, 2);
-double l = sqrt(k/P);
-double dz = z / N, dt = 0.51* pow(dz, 2), ta = 0.025;
+double T[M][N];
+double Tc = 273.15 + 36.5;
+double V = 40;
+double cond = 0.472, k = 0.56, cv = 3683, rho = 1081;
+double P = cond * pow(V, 2) / 4;
+double dz = 1. / N, dt = 0.49 * pow(dz, 2), ta = 0.025;
 
 int main(){
-    for (int i = 0; i < N; i++){
-        T[i][0] = 1;
-        T[0][i] = 1;
-        T[N-1][i] = 1;
-    }
+        for (int j = 0; j < N; j++){
+            T[0][j] = Tc / P;
+            }
+        for (int i = 0; i < M; i++){
+            T[i][0] = Tc / P;
+            T[i][M-1] = Tc / P;
+        }
 
-// No sé si poner i = 0 ó i i = 1, ya que con i = 1 no existe el punto T[1][j]
-    for (int i = 0; i + 1 < N; i++) {
+
+    for (int i = 0; i + 1 < M; i++) {
         for (int j = 1; j < N; j++) {
             T[i+1][j] = dt / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt + T[i][j];
         }
@@ -31,11 +33,11 @@ int main(){
 
     txt = fopen("Ablacio.txt", "w");
 
-    for (int j = 0; j < N; j++){
-        for (int i = 0; i < N - 1; i++){
-            fprintf(txt, "%lf,", T[i][j]*T_0);
+    for (int i = 0; i < M; i++){
+        for (int j = 0; j < N-1; j++){
+            fprintf(txt, "%lf,", T[i][j]*P);
         }
-        fprintf(txt, "%lf\n", T[N-1][j]);
+        fprintf(txt, "%lf\n", T[i][N-1]*P);
     }
 
     fclose(txt);

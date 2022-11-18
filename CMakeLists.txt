@@ -13,4 +13,5 @@ add_executable(AblacioCardiaca
         .idea/vcs.xml
         .idea/workspace.xml
         AblacioCardiaca.cpp
-        GraficosAblacion.py)
+        GraficosAblacion.py
+        )
