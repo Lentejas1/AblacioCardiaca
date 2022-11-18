@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cmath>
 #define N 100
-#define M 1000
+#define M 2000
 using namespace std;
 
 double T[M][N];
