@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cmath>
 #define N 100
-#define M 2000
+#define M 1000
 using namespace std;
 
 double T[M][N];
@@ -14,11 +14,11 @@ double dz = 1. / N, dt = 0.49 * pow(dz, 2), ta = 0.025;
 
 int main(){
         for (int j = 0; j < N; j++){
-            T[0][j] = Tc / P;
+            T[0][j] = Tc * k / P;
             }
         for (int i = 0; i < M; i++){
-            T[i][0] = Tc / P;
-            T[i][M-1] = Tc / P;
+            T[i][0] = Tc * k / P;
+            T[i][N-1] = Tc * k / P;
         }
 
 
@@ -35,9 +35,9 @@ int main(){
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
-            fprintf(txt, "%lf,", T[i][j]*P);
+            fprintf(txt, "%lf,", T[i][j]*P/k);
         }
-        fprintf(txt, "%lf\n", T[i][N-1]*P);
+        fprintf(txt, "%lf\n", T[i][N-1]*P/k);
     }
 
     fclose(txt);
