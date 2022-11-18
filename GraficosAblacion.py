@@ -66,7 +66,8 @@ plt.plot(t, unhealthy_cured, label="Cèl·lules curades")
 plt.plot(t, healthy_unsafe, label="Cèl·lules sanes mortes")
 plt.xlabel("t (s)")
 plt.ylabel("n")
-plt.axvline(careful*dt*T, label="Cèl·lules sanes calcinades", color="red")
+if careful_bool:
+    plt.axvline(careful*dt*T, label="Cèl·lules sanes calcinades", color="red")
 if not alive:
     plt.axvline(dead, label="Trombosi", color="red")
 plt.legend()
