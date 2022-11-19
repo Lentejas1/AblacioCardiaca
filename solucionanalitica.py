@@ -10,10 +10,8 @@ N = 100
 
 def f(x, t):
     suma = 0
-    for n in range(1, N + 1):
-        if n % 2 == 0:
-            suma = suma
-        else:
+    for n in range(1, 801):
+        if n % 2 != 0:
             suma += 4 / (n * pi) * (1 - exp(-1 * t * (n * pi) ** 2)) / ((n * pi) ** 2) * sin(
                 n * pi * x)
     return Tc * k / P + suma
