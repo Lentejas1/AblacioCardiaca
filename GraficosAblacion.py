@@ -9,7 +9,7 @@ N = 100
 path = r"cmake-build-debug\Ablacio.txt"
 matrix = []
 dz = 0.01
-dt = 0.49 * dz ** 2
+dt = 0.25 * dz ** 2
 alpha = 0.56 / (3683 * 1081)
 Z = 2
 T = 0.02 ** 2 / alpha
@@ -67,9 +67,12 @@ plt.plot(t, healthy_unsafe, label="Cèl·lules sanes mortes")
 plt.xlabel("t (s)")
 plt.ylabel("n")
 if careful_bool:
-    plt.axvline(careful*dt*T, label="Cèl·lules sanes calcinades", color="red")
+    plt.axvline(careful*dt*T, color="red")
 if not alive:
     plt.axvline(dead, label="Trombosi", color="red")
-plt.legend()
-plt.xlim(careful*dt*T-20, careful*dt*T+20)
+plt.legend(loc='upper left')
+plt.xlim(careful*dt*T-40, careful*dt*T+20)
+plt.tight_layout()
 plt.show()
+
+print(f"t_max={careful*dt*T} s")

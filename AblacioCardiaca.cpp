@@ -10,7 +10,7 @@ double Tc = 273.15 + 36.5;
 double V = 40;
 double cond = 0.472, k = 0.56, cv = 3683, rho = 1081;
 double P = cond * pow(V, 2) / 4;
-double dz = 1. / N, dt = 0.49 * pow(dz, 2), ta = 0.025;
+double dz = 1. / N, dt = 0.25 * pow(dz, 2), ta = 0.025;
 
 int main(){
         for (int j = 0; j < N; j++){
