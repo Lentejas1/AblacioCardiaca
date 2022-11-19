@@ -1,13 +1,23 @@
-import numpy as np
+from numpy import sin, pi, exp
 
-
-def b_n(m):
-    return 4 / (m * np.pi)
+Tc = 273.15 + 36.5
+k = 0.56
+V = 40
+cond = 0.472
+P = cond * (V ** 2) / 4
+N = 100
 
 
 def f(x, t):
-    return sum([b_n(2 * n + 1) * (1 - np.exp(-2 * n + 1 ** 2 * np.pi ** 2 * t)) / (2 * n + 1 ** 2 * np.pi ** 2)
-                * np.sin(2 * n + 1 * np.pi * x)] for n in range(100))
+    suma = 0
+    for n in range(1, N + 1):
+        if n % 2 == 0:
+            suma = suma
+        else:
+            suma += 4 / (n * pi) * (1 - exp(-1 * t * (n * pi) ** 2)) / ((n * pi) ** 2) * sin(
+                n * pi * x)
+    return Tc * k / P + suma
 
 
-print(f(0.1, 1))
+lista_T = [f(i / N, 0.025) * (P / k) - 273.15 for i in range(100)]
+print(lista_T)

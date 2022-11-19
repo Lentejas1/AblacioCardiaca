@@ -7,9 +7,9 @@ using namespace std;
 
 double Tc = 273.15 + 36.5;
 double V = 40;
-double cond = 0.472, k = 0.56, cv = 3683, rho = 1081;
+double cond = 0.472, k = 0.56;
 double P = cond * pow(V, 2) / 4;
-double dz = 1. / N, ta = 0.025;
+double dz = 1. / N;
 
 
 double dt(float ratio){
