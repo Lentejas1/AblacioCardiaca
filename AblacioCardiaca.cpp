@@ -16,8 +16,20 @@ double dt(float ratio){
     return ratio * pow(dz, 2);
 }
 
+double f(double x, double t){
+    double sum = 0;
+    for (int n = 0; n < 801; n++){
+        if (n % 2 != 0) {
+            sum += 4 / (n * M_PI) * (1 - exp(-1 * t * pow(n * M_PI, 2))) / pow(n * M_PI, 2) * sin(
+                    n * M_PI * x);
+        }
+    }
+    return sum + Tc * k / P;
+}
+
 void explicit_method(float ratio){
     double T[M][N];
+    double E_Texplicit[M][N];
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
     }
@@ -30,6 +42,7 @@ void explicit_method(float ratio){
     for (int i = 0; i + 1 < M; i++) {
         for (int j = 1; j < N; j++) {
             T[i+1][j] = dt(ratio) / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt(ratio) + T[i][j];
+            //E_Texplicit[i+1][j] = T[i+1][j]*P/k - f(dz*j*0.02,t);
         }
     }
 
@@ -46,11 +59,11 @@ void explicit_method(float ratio){
     }
 
     fclose(txt);
+
 }
 
 void implicit_method(float ratio){
     double T[M][N];
-    double gamma = dt(ratio) / pow(dz,2);
 
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
@@ -62,12 +75,12 @@ void implicit_method(float ratio){
 
     double T_gs[N];
     for (int i = 0; i + 1 < M; i++) {
-        for (int g; g < 400; g++){
-            for (int j = 1; j<N; j++){
-                T_gs[j] = T[i][j-1];
+        for (int g = 1; g < 400; g++){
+            for (int j = 0; j<N; j++){
+                T_gs[j] = T[i][j];
             }
             for (int j = 1; j < N; j++) {
-                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*gamma + dt(ratio) + T[i-1][j])/(1+2*gamma);
+                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*ratio + dt(ratio) + T[i-1][j])/(1+2*ratio);
             }
         }
 
@@ -91,7 +104,7 @@ void implicit_method(float ratio){
 
 
 int main(){
-        explicit_method(0.49);
-        implicit_method(0.49);
+    explicit_method(0.49);
+    implicit_method(0.49);
         return 0;
 }
