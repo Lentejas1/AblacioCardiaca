@@ -73,6 +73,7 @@ def plot(path_f, M_f, N_f, ratio):
     plt.tight_layout()
     plt.show()
 
+
     print(f"t_max={careful * dt * T} s")
 
 

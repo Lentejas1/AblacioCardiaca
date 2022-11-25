@@ -8,9 +8,10 @@ using namespace std;
 double Tc = 273.15 + 36.5;
 double V = 40;
 double cond = 0.472, k = 0.56;
-double P = cond * pow(V, 2) / 4;
+double P = cond * pow(V, 2) / 2;
 double dz = 1. / N;
-
+double alpha = 0.56 / (3683 * 1081);
+double tn = pow(0.02,2) / alpha;
 
 double dt(float ratio){
     return ratio * pow(dz, 2);
@@ -27,9 +28,20 @@ double f(double x, double t){
     return sum + Tc * k / P;
 }
 
+double analytic_sol(){
+    double T_f, T_opt;
+    T_f = (36.5 + 273.15) * k / P;
+    T_opt = (50 + 273.15) * k / P;
+    double t = 0;
+    while (T_f < T_opt){
+        t += 0.0001;
+        T_f = f(0.375,t);
+    }
+    return t*tn;
+}
+
 void explicit_method(float ratio){
     double T[M][N];
-    double E_Texplicit[M][N];
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
     }
@@ -42,7 +54,6 @@ void explicit_method(float ratio){
     for (int i = 0; i + 1 < M; i++) {
         for (int j = 1; j < N; j++) {
             T[i+1][j] = dt(ratio) / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt(ratio) + T[i][j];
-            //E_Texplicit[i+1][j] = T[i+1][j]*P/k - f(dz*j*0.02,t);
         }
     }
 
@@ -106,5 +117,6 @@ void implicit_method(float ratio){
 int main(){
     explicit_method(0.49);
     implicit_method(0.49);
-        return 0;
+    cout << analytic_sol();
+    return 0;
 }
