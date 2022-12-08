@@ -13,9 +13,14 @@ double dz = 1. / N;
 double alpha = 0.56 / (3683 * 1081);
 double tn = pow(0.02,2) / alpha;
 
-double dt(float ratio){
+double dt_exp(float ratio){
     return ratio * pow(dz, 2);
 }
+
+double dt_imp(float ratio){
+    return ratio * dz;
+}
+
 
 double f(double x, double t){
     double sum = 0;
@@ -53,7 +58,8 @@ void explicit_method(float ratio){
 
     for (int i = 0; i + 1 < M; i++) {
         for (int j = 1; j < N; j++) {
-            T[i+1][j] = dt(ratio) / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt(ratio) + T[i][j];
+            T[i+1][j] =
+                    dt_exp(ratio) / (pow(dz, 2)) * (T[i][j + 1] - 2 * T[i][j] + T[i][j - 1]) + dt_exp(ratio) + T[i][j];
         }
     }
 
@@ -91,7 +97,7 @@ void implicit_method(float ratio){
                 T_gs[j] = T[i][j];
             }
             for (int j = 1; j < N; j++) {
-                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*ratio + dt(ratio) + T[i-1][j])/(1+2*ratio);
+                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*ratio + dt_imp(ratio) + T[i - 1][j]) / (1 + 2 * ratio);
             }
         }
 
@@ -115,8 +121,8 @@ void implicit_method(float ratio){
 
 
 int main(){
-    explicit_method(0.49);
-    implicit_method(0.49);
+    explicit_method(0.51);
+    //implicit_method(0.49);
     cout << analytic_sol();
     return 0;
 }
