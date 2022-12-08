@@ -4,7 +4,7 @@ Tc = 273.15 + 36.5
 k = 0.56
 V = 40
 cond = 0.472
-P = cond * (V ** 2) / 4
+P = cond * (V ** 2) / 2
 N = 100
 
 
@@ -17,5 +17,5 @@ def f(x, t):
     return Tc * k / P + suma
 
 
-lista_T = [f(i / N, 0.025) * (P / k) - 273.15 for i in range(100)]
+lista_T = [round(f(i / N, 0.025) * (P / k) - 273.15, 5) for i in range(100)]
 print(lista_T)

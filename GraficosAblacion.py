@@ -25,15 +25,15 @@ def plot(path_f, M_f, N_f, ratio):
             matrix[i][j] = float(matrix[i][j]) - 273.15
 
     plt.figure(figsize=(4, 3))
-    ax = plt.pcolormesh(z, t, matrix)
+    plt.pcolormesh(z, t, matrix)
     cbar = plt.colorbar()
-    cbar.set_label("$T$ (ºC)")
+    cbar.set_label("$T$ ($^\circ$C)")
     plt.ylabel("$t$ (s)")
     plt.xlabel("$z$ (cm)")
     plt.axvline(0.75, color="red")
     plt.axvline(1.25, color="red")
     plt.tight_layout()
-    plt.savefig("explicito515heatmap.png")
+    plt.savefig("implicito5heatmap.png")
     plt.show()
 
     # CHEQUEO MAX Y MUERTE
@@ -65,8 +65,8 @@ def plot(path_f, M_f, N_f, ratio):
 
     plt.plot(t, unhealthy_cured, label="Células curadas")
     plt.plot(t, healthy_unsafe, label="Células sanas muertas")
-    plt.xlabel("t (s)")
-    plt.ylabel("n")
+    plt.xlabel("$t$ (s)")
+    plt.ylabel("$n$")
     if careful_bool:
         plt.axvline(careful * dt * T, color="red")
     if not alive:
@@ -74,7 +74,7 @@ def plot(path_f, M_f, N_f, ratio):
     plt.legend(loc='upper left')
     plt.xlim(careful * dt * T - 20, careful * dt * T + 20)
     plt.tight_layout()
-    plt.savefig("explicito51grafico.png")
+    plt.savefig("implicito5grafico.png")
     plt.show()
 
     print(f"t_max={careful * dt * T} s")
@@ -82,4 +82,4 @@ def plot(path_f, M_f, N_f, ratio):
 
 M = 2000
 N = 100
-plot(r"cmake-build-debug\Ablacio_Explicit.txt", M, N, 0.51)
+plot(r"cmake-build-debug\Ablacio_Implicit5.txt", M, N, .5)

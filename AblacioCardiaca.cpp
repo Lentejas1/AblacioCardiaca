@@ -12,13 +12,10 @@ double P = cond * pow(V, 2) / 2;
 double dz = 1. / N;
 double alpha = 0.56 / (3683 * 1081);
 double tn = pow(0.02,2) / alpha;
+double cosa= 0.5*dz;
 
-double dt_exp(float ratio){
+double dt(float ratio){
     return ratio * pow(dz, 2);
-}
-
-double dt_imp(float ratio){
-    return ratio * dz;
 }
 
 
@@ -39,7 +36,7 @@ double analytic_sol(){
     T_opt = (50 + 273.15) * k / P;
     double t = 0;
     while (T_f < T_opt){
-        t += 0.0001;
+        t += cosa;
         T_f = f(0.375,t);
     }
     return t*tn;
@@ -58,8 +55,7 @@ void explicit_method(float ratio){
 
     for (int i = 0; i + 1 < M; i++) {
         for (int j = 1; j < N; j++) {
-            T[i+1][j] =
-                    dt_exp(ratio) / (pow(dz, 2)) * (T[i][j + 1] - 2 * T[i][j] + T[i][j - 1]) + dt_exp(ratio) + T[i][j];
+            T[i+1][j] = dt(ratio) / (pow(dz, 2)) * (T[i][j+1] - 2 * T[i][j] + T[i][j-1]) + dt(ratio) + T[i][j];
         }
     }
 
@@ -91,13 +87,13 @@ void implicit_method(float ratio){
     }
 
     double T_gs[N];
-    for (int i = 0; i + 1 < M; i++) {
+    for (int i = 0; i < M; i++) {
         for (int g = 1; g < 400; g++){
             for (int j = 0; j<N; j++){
                 T_gs[j] = T[i][j];
             }
             for (int j = 1; j < N; j++) {
-                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*ratio + dt_imp(ratio) + T[i - 1][j]) / (1 + 2 * ratio);
+                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*ratio + dt(ratio) + T[i-1][j])/(1+2*ratio);
             }
         }
 
@@ -106,7 +102,7 @@ void implicit_method(float ratio){
 
     FILE* txt;
 
-    txt = fopen("Ablacio_Implicit.txt", "w");
+    txt = fopen("Ablacio_Implicit5.txt", "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -121,8 +117,7 @@ void implicit_method(float ratio){
 
 
 int main(){
-    explicit_method(0.51);
-    //implicit_method(0.49);
+    implicit_method(.5);
     cout << analytic_sol();
     return 0;
 }
