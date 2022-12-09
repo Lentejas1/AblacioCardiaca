@@ -79,10 +79,6 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     print(f"t_max={careful * dt * T} s")
 
 
-M = 2000
-N = 100
-
-
 def plot_implicit(path_f, M_f, N_f, ratio):
     matrix = []
     dz = 0.01
@@ -93,7 +89,6 @@ def plot_implicit(path_f, M_f, N_f, ratio):
     z = np.linspace(0, dz * 100 * Z, 100)
     t = np.linspace(0, dt * M_f * T, M_f)
     print(t)
-
 
     with open(path_f, "r") as f:
         lines = [line.rstrip() for line in f]
@@ -161,6 +156,66 @@ def plot_implicit(path_f, M_f, N_f, ratio):
     print(f"t_max={careful * dt * T} s")
 
 
-N = 100
+N = 101
+#######################################################################################
+path_f = "cmake-build-debug/Ablacio_Explicit025.txt"
 
-plot_implicit(r"cmake-build-debug\Ablacio_Implicit1.txt", 6, N, 1)
+
+def t0025file(path_f):
+    matrixt00025 = []
+    arrayimp00025 = []
+
+    with open(path_f, "r") as f:
+        lines = [line.rstrip() for line in f]
+
+    for line in lines:
+        matrixt00025.append(line.split(","))
+
+    for i in range(len(matrixt00025)):
+        for j in range(int(len(matrixt00025[0]))):
+            matrixt00025[i][j] = float(matrixt00025[i][j]) - 273.15
+
+    for i in range(101):
+        arrayimp00025.append(matrixt00025[-1][i])
+
+    return arrayimp00025
+
+
+dz = 0.01
+Z = 2
+z = np.linspace(0, dz * 100 * Z, 101)
+
+plt.figure(figsize=(5, 3))
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit025.txt")
+            , label="$\dfrac{\Delta t}{(\Delta z)^2}=0.25$", s=0.1)
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit049.txt")
+            , label="$\dfrac{\Delta t}{(\Delta z)^2}=0.49$", s=0.1)
+plt.xlabel("$z$ (m)")
+plt.ylabel("$T$ ($^\circ$C)")
+plt.legend(loc='lower center')
+plt.tight_layout()
+plt.savefig("t_aexp025049.png")
+
+plt.show()
+
+plt.figure(figsize=(5, 3))
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit051.txt"), label="$\dfrac{\Delta t}{(\Delta z)^2}=0.51$",
+            s=0.1)
+plt.xlabel("$z$ (m)")
+plt.ylabel("$T$ ($^\circ$C)")
+plt.legend(loc='lower center')
+plt.tight_layout()
+plt.savefig("t_aexp050100.png")
+
+plt.show()
+
+plt.figure(figsize=(5, 3))
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit050.txt"), label="$\dfrac{\Delta t}{\Delta z}=0.5$", s=0.1)
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit100.txt"), label="$\dfrac{\Delta t}{\Delta z}=1$", s=0.1)
+plt.xlabel("$z$ (m)")
+plt.ylabel("$T$ ($^\circ$C)")
+plt.legend(loc='lower center')
+plt.tight_layout()
+plt.savefig("t_aexp050100.png")
+
+plt.show()

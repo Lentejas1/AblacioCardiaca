@@ -12,7 +12,7 @@ double dz = 1. / 100;
 double alpha = 0.56 / (3683 * 1081);
 double tn = pow(0.02,2) / alpha;
 double cosa= 0.5*dz;
-
+int N = 101;
 double dt_exp(float ratio){
     return ratio * pow(dz, 2);
 }
@@ -44,9 +44,7 @@ double analytic_sol(){
     return t*tn;
 }
 
-void explicit_method(double ratio){
-    int N = 100;
-    int M=2000;
+void explicit_method(double ratio, int M){
     double T[M][N];
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
@@ -58,7 +56,7 @@ void explicit_method(double ratio){
 
 
     for (int i = 0; i + 1 < M; i++) {
-        for (int j = 1; j < N; j++) {
+        for (int j = 1; j < N -1; j++) {
             T[i+1][j] =
                     dt_exp(ratio) / (pow(dz, 2)) * (T[i][j + 1] - 2 * T[i][j] + T[i][j - 1]) + dt_exp(ratio) + T[i][j];
         }
@@ -67,7 +65,7 @@ void explicit_method(double ratio){
 
     FILE* txt;
 
-    txt = fopen("Ablacio_Explicit.txt", "w");
+    txt = fopen("Ablacio_Explicit051.txt", "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -84,9 +82,7 @@ double gamma(double ratio){
     return ratio / dz;
 }
 
-void implicit_method(float ratio){
-    int M = 6;
-    int N = 100;
+void implicit_method(float ratio, int M){
     double T[M][N];
 
     for (int j = 0; j < N; j++){
@@ -97,34 +93,20 @@ void implicit_method(float ratio){
         T[i][N-1] = Tc * k / P;
     }
 
-    /*    double T_gs[N];
 
-     * for (int i = 1; i < M; i++) {
-        for (int g = 1; g < 1500; g++){
-            for (int j = 0; j<N; j++){
-                T_gs[j] = T[i][j];
-            }
-            for (int j = 1; j < N - 1; j++) {
-                T[i][j] = ((T_gs[j+1]+T_gs[j-1])*gamma(ratio) + dt_imp(ratio) + T[i - 1][j]) / (1 + 2 * gamma(ratio));
-            }
-        }
-
-    }
-     */
     for (int i = 1; i < M; i++) {
         int j;
         T[i][j] = T[i-1][j];
 
         for (int g = 1; g < 2000; g++){
             for (int j = 1; j+1<N; j++){
-                T[i][j] = ((T[i][j+1]+T[i][j-1])*gamma(ratio) + dt_imp(ratio) + T[i - 1][j]) / (1 + 2 * gamma(ratio));
+                T[i][j] = ((T[i][j+1]+T[i][j-1])*gamma(ratio) + dt_imp(ratio) + T[i-1][j]) / (1 + 2 * gamma(ratio));
             }
         }
     }
 
     FILE* txt;
-
-    txt = fopen("Ablacio_Implicit1.txt", "w");
+    txt = fopen("Ablacio_Implicit100.txt", "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -139,8 +121,10 @@ void implicit_method(float ratio){
 
 
 int main(){
-    implicit_method(1);
-
-    cout << analytic_sol();
+    //explicit_method(0.25, 1001);
+    //explicit_method(0.49, 511);
+    explicit_method(0.51, 492);
+    //implicit_method(0.5, 6);
+    //implicit_method(1, 3);
     return 0;
 }
