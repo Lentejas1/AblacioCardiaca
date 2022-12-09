@@ -32,7 +32,7 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     plt.axvline(0.75, color="red")
     plt.axvline(1.25, color="red")
     plt.tight_layout()
-    plt.savefig("implicito5heatmap.png")
+    plt.savefig("resultat_heatmap.png")
     plt.show()
 
     # CHEQUEO MAX Y MUERTE
@@ -73,7 +73,7 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     plt.legend(loc='upper left')
     plt.xlim(careful * dt * T - 20, careful * dt * T + 20)
     plt.tight_layout()
-    plt.savefig("implicito5grafico.png")
+    plt.savefig("resultat_grafic.png")
     plt.show()
 
     print(f"t_max={careful * dt * T} s")
@@ -219,3 +219,5 @@ plt.tight_layout()
 plt.savefig("t_aexp050100.png")
 
 plt.show()
+
+#plot_explicit("cmake-build-debug/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25) Este da error pero ya lo tenemos pintado

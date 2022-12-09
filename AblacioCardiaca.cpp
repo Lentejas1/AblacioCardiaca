@@ -65,7 +65,7 @@ void explicit_method(double ratio, int M){
 
     FILE* txt;
 
-    txt = fopen("Ablacio_Explicit051.txt", "w");
+    txt = fopen("Ablacio_Explicit_ResultatFinal.txt", "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -123,8 +123,9 @@ void implicit_method(float ratio, int M){
 int main(){
     //explicit_method(0.25, 1001);
     //explicit_method(0.49, 511);
-    explicit_method(0.51, 492);
+    //explicit_method(0.51, 492);
     //implicit_method(0.5, 6);
     //implicit_method(1, 3);
+    explicit_method(0.25, 2000);
     return 0;
 }
