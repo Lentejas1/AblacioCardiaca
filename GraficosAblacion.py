@@ -1,7 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy import pi, exp, sin
 
 plt.style.use("science")
+
+Tc = 273.15 + 36.5
+k = 0.56
+V = 40
+cond = 0.472
+P = cond * (V ** 2) / 2
+
+
+def f(x, t):
+    suma = 0
+    for n in range(1, 801):
+        if n % 2 != 0:
+            suma += 4 / (n * pi) * (1 - exp(-1 * t * (n * pi) ** 2)) / ((n * pi) ** 2) * sin(n * pi * x)
+    return Tc * k / P + suma
 
 
 def plot_explicit(path_f, M_f, N_f, ratio):
@@ -32,8 +47,7 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     plt.axvline(0.75, color="red")
     plt.axvline(1.25, color="red")
     plt.tight_layout()
-    plt.savefig("resultat_heatmap.png")
-    plt.show()
+    plt.savefig("figures/resultat_heatmap.png", dpi=300)
 
     # CHEQUEO MAX Y MUERTE
     unhealthy_cured = []
@@ -73,8 +87,7 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     plt.legend(loc='upper left')
     plt.xlim(careful * dt * T - 20, careful * dt * T + 20)
     plt.tight_layout()
-    plt.savefig("resultat_grafic.png")
-    plt.show()
+    plt.savefig("figures/resultat_grafic.png", dpi=300)
 
     print(f"t_max={careful * dt * T} s")
 
@@ -109,7 +122,7 @@ def plot_implicit(path_f, M_f, N_f, ratio):
     plt.axvline(0.75, color="red")
     plt.axvline(1.25, color="red")
     plt.tight_layout()
-    plt.savefig("implicito1heatmap.png")
+    plt.savefig("figures/implicito1heatmap.png")
     plt.show()
 
     # CHEQUEO MAX Y MUERTE
@@ -150,7 +163,7 @@ def plot_implicit(path_f, M_f, N_f, ratio):
     plt.legend(loc='upper left')
     plt.xlim(careful * dt * T - 20, careful * dt * T + 20)
     plt.tight_layout()
-    plt.savefig("implicito1grafico.png")
+    plt.savefig("figures/implicito1grafico.png")
     plt.show()
 
     print(f"t_max={careful * dt * T} s")
@@ -159,7 +172,6 @@ def plot_implicit(path_f, M_f, N_f, ratio):
 def t0025file(path_f):
     matrixt00025 = []
     arrayimp00025 = []
-
     with open(path_f, "r") as f:
         lines = [line.rstrip() for line in f]
 
@@ -176,6 +188,37 @@ def t0025file(path_f):
     return arrayimp00025
 
 
+def plot_error(path_f, filename):
+    array_numerico = t0025file(path_f)
+    lista_E_T = [abs(float(array_numerico[i]) - f(i / 100, 0.025) * (P / k) + 273.15) for i in range(101)]
+    plt.figure(figsize=(4, 3))
+    plt.scatter(z, lista_E_T, color="royalblue", s=1)
+    plt.xlabel("$z$ (cm)")
+    plt.ylabel("$E_{T}$ ($^\circ$C)")
+    mean = np.mean(lista_E_T)
+    std = np.std(lista_E_T)
+    plt.axhline(mean, linestyle="--", color="r", label=r"$\bar{E_T}=$" + "{:.2g} $^\circ$C".format(mean))
+    plt.tight_layout()
+    plt.legend()
+    # print(f"Media={np.mean(lista_E_T)} K")
+    # print("std=", std)
+    filename += ".png"
+    plt.savefig(filename, dpi=300)
+    # plt.show()
+
+
+def plot_analitico():
+    lista_T = [f(i / 100, 0.025) * (P / k) - 273.15 for i in range(101)]
+    plt.figure(figsize=(4, 3))
+    plt.scatter(z, lista_T, color="royalblue", s=1)
+    plt.xlabel("$z$ (cm)")
+    plt.ylabel("$T$ ($^\circ$C)")
+    plt.tight_layout()
+    plt.axvline(0.75, color="red")
+    plt.axvline(1.25, color="red")
+    plt.savefig("figures/Analítico_ta.png", dpi=300)
+
+
 dz = 0.01
 Z = 2
 z = np.linspace(0, dz * 100 * Z, 101)
@@ -189,30 +232,35 @@ plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
 plt.legend(loc='lower center')
 plt.tight_layout()
-plt.savefig("t_aexp025049.png")
-
-plt.show()
+plt.savefig("figures/t_aexp025049.png", dpi=300)
 
 plt.figure(figsize=(5, 3))
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit051.txt"), label="$\dfrac{\Delta \hat{t}}{(\Delta \hat{z})^2}=0.51$",
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit051.txt"),
+            label="$\dfrac{\Delta \hat{t}}{(\Delta \hat{z})^2}=0.51$",
             s=0.1)
 plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
 plt.legend(loc='lower center')
 plt.tight_layout()
-plt.savefig("t_aexp050100.png")
-
-plt.show()
+plt.savefig("figures/t_aexp050100.png", dpi=300)
 
 plt.figure(figsize=(5, 3))
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit050.txt"), label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=0.5$", s=0.1)
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit100.txt"), label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=1$", s=0.1)
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit050.txt"),
+            label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=0.5$", s=0.1)
+plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit100.txt"),
+            label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=1$", s=0.1)
 plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
 plt.legend(loc='lower center')
 plt.tight_layout()
-plt.savefig("t_aimp050100.png")
-
-plt.show()
+plt.savefig("figures/t_aimp050100.png", dpi=300)
 
 plot_explicit("cmake-build-debug/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25)
+
+plot_error("cmake-build-debug/Ablacio_Explicit025.txt", "figures/Error_T_exp_0.25_ta")
+plot_error("cmake-build-debug/Ablacio_Explicit049.txt", "figures/Error_T_exp_0.49_ta")
+plot_error("cmake-build-debug/Ablacio_Explicit051.txt", "figures/Error_T_exp_0.51_ta")
+plot_error("cmake-build-debug/Ablacio_Implicit050.txt", "figures/Error_T_imp_0.50_ta")
+plot_error("cmake-build-debug/Ablacio_Implicit100.txt", "figures/Error_T_imp_1.00_ta")
+plot_analitico()
+
