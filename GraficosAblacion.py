@@ -11,7 +11,7 @@ def plot_explicit(path_f, M_f, N_f, ratio):
     alpha = 0.56 / (3683 * 1081)
     Z = 2
     T = 0.02 ** 2 / alpha
-    z = np.linspace(0, dz * 100 * Z, 100)
+    z = np.linspace(0, dz * 100 * Z, 101)
     t = np.linspace(0, dt * M_f * T, M_f)
     with open(path_f, "r") as f:
         lines = [line.rstrip() for line in f]
@@ -156,11 +156,6 @@ def plot_implicit(path_f, M_f, N_f, ratio):
     print(f"t_max={careful * dt * T} s")
 
 
-N = 101
-#######################################################################################
-path_f = "cmake-build-debug/Ablacio_Explicit025.txt"
-
-
 def t0025file(path_f):
     matrixt00025 = []
     arrayimp00025 = []
@@ -220,4 +215,4 @@ plt.savefig("t_aexp050100.png")
 
 plt.show()
 
-#plot_explicit("cmake-build-debug/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25) Este da error pero ya lo tenemos pintado
+plot_explicit("cmake-build-debug/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25)
