@@ -224,9 +224,9 @@ Z = 2
 z = np.linspace(0, dz * 100 * Z, 101)
 
 plt.figure(figsize=(5, 3))
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit025.txt")
+plt.scatter(z, t0025file("data/Ablacio_Explicit025.txt")
             , label="$\dfrac{\Delta \hat{t}}{(\Delta \hat{z})^2}=0.25$", s=0.1)
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit049.txt")
+plt.scatter(z, t0025file("data/Ablacio_Explicit049.txt")
             , label="$\dfrac{\Delta \hat{t}}{(\Delta \hat{z})^2}=0.49$", s=0.1)
 plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
@@ -235,7 +235,7 @@ plt.tight_layout()
 plt.savefig("figures/t_aexp025049.png", dpi=300)
 
 plt.figure(figsize=(5, 3))
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Explicit051.txt"),
+plt.scatter(z, t0025file("data/Ablacio_Explicit051.txt"),
             label="$\dfrac{\Delta \hat{t}}{(\Delta \hat{z})^2}=0.51$",
             s=0.1)
 plt.xlabel("$z$ (m)")
@@ -245,9 +245,9 @@ plt.tight_layout()
 plt.savefig("figures/t_aexp050100.png", dpi=300)
 
 plt.figure(figsize=(5, 3))
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit050.txt"),
+plt.scatter(z, t0025file("data/Ablacio_Implicit050.txt"),
             label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=0.5$", s=0.1)
-plt.scatter(z, t0025file("cmake-build-debug/Ablacio_Implicit100.txt"),
+plt.scatter(z, t0025file("data/Ablacio_Implicit100.txt"),
             label="$\dfrac{\Delta \hat{t}}{\Delta \hat{z}}=1$", s=0.1)
 plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
@@ -255,12 +255,12 @@ plt.legend(loc='lower center')
 plt.tight_layout()
 plt.savefig("figures/t_aimp050100.png", dpi=300)
 
-plot_explicit("cmake-build-debug/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25)
+plot_explicit("data/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25)
 
-plot_error("cmake-build-debug/Ablacio_Explicit025.txt", "figures/Error_T_exp_0.25_ta")
-plot_error("cmake-build-debug/Ablacio_Explicit049.txt", "figures/Error_T_exp_0.49_ta")
-plot_error("cmake-build-debug/Ablacio_Explicit051.txt", "figures/Error_T_exp_0.51_ta")
-plot_error("cmake-build-debug/Ablacio_Implicit050.txt", "figures/Error_T_imp_0.50_ta")
-plot_error("cmake-build-debug/Ablacio_Implicit100.txt", "figures/Error_T_imp_1.00_ta")
+plot_error("data/Ablacio_Explicit025.txt", "figures/Error_T_exp_0.25_ta")
+plot_error("data/Ablacio_Explicit049.txt", "figures/Error_T_exp_0.49_ta")
+plot_error("data/Ablacio_Explicit051.txt", "figures/Error_T_exp_0.51_ta")
+plot_error("data/Ablacio_Implicit050.txt", "figures/Error_T_imp_0.50_ta")
+plot_error("data/Ablacio_Implicit100.txt", "figures/Error_T_imp_1.00_ta")
 plot_analitico()
 
