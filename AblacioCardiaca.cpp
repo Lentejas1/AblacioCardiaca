@@ -117,6 +117,6 @@ int main(){
     //explicit_method(0.49, 511);
     explicit_method(0.51, 492);
     //implicit_method(0.5, 6);
-    //implicit_method(1, 3);
+    implicit_method(1, 3);
     return 0;
 }
