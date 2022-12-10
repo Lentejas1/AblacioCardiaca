@@ -211,7 +211,7 @@ plt.xlabel("$z$ (m)")
 plt.ylabel("$T$ ($^\circ$C)")
 plt.legend(loc='lower center')
 plt.tight_layout()
-plt.savefig("t_aexp050100.png")
+plt.savefig("t_aimp050100.png")
 
 plt.show()
 
