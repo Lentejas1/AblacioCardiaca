@@ -23,6 +23,18 @@ def f(x, t):
     return Tc * k / P + suma
 
 
+def tiempo_optimo():
+    T = 0.02 ** 2 / alpha
+    T_f = (36.5 + 273.15) * k / P
+    T_opt = (50 + 273.15) * k / P
+    t = 0
+    while T_f < T_opt:
+        t += 1E-6
+        T_f = f(0.375, t)
+
+    return t * T
+
+
 def plot_resultado(path_f, M_f, N_f, ratio, show=False):
     matrix = []
     dt = ratio * dz ** 2
@@ -114,16 +126,6 @@ def t0025file(path_f):
 
     return arrayimp00025
 
-def tiempo_optimo():
-    T = 0.02 ** 2 / alpha
-    T_f = (36.5 + 273.15) * k / P
-    T_opt = (50 + 273.15) * k / P
-    t = 0
-    while T_f < T_opt:
-        t += 1E-6
-        T_f = f(0.375, t)
-
-    return t*T
 
 def plot_error(ratio, metodo, path_f, filename, output_data=False, show=False):
     array_numerico = t0025file(path_f)
@@ -254,4 +256,3 @@ plot_resultado("data/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25, show=
 
 # CREA LOS ARCHIVOS REQUERIDOS EN EL APARTADO DE ENVÍO DEL CV
 tramesa()
-
