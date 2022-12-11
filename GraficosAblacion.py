@@ -157,7 +157,7 @@ def plot_error(ratio, metodo, path_f, filename, output_data=False, show=False):
 def plot_analitico(show=False):
     lista_T = [f(i / 100, 0.025) * (P / k) - 273.15 for i in range(101)]
     plt.figure(figsize=(4, 3))
-    plt.scatter(z, lista_T, color="royalblue", s=1)
+    plt.plot(z, lista_T, color="royalblue")
     plt.xlabel("$z$ (cm)")
     plt.ylabel("$T$ ($^\circ$C)")
     plt.tight_layout()
