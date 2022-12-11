@@ -12,6 +12,7 @@ P = cond * (V ** 2) / 2
 dz = 0.01
 Z = 2
 z = np.linspace(0, dz * 100 * Z, 101)
+alpha = 0.56 / (3683 * 1081)
 
 
 def f(x, t):
@@ -24,12 +25,8 @@ def f(x, t):
 
 def plot_resultado(path_f, M_f, N_f, ratio, show=False):
     matrix = []
-    dz = 0.01
     dt = ratio * dz ** 2
-    alpha = 0.56 / (3683 * 1081)
-    Z = 2
     T = 0.02 ** 2 / alpha
-    z = np.linspace(0, dz * 100 * Z, 101)
     t = np.linspace(0, dt * M_f * T, M_f)
     with open(path_f, "r") as f:
         lines = [line.rstrip() for line in f]
@@ -117,10 +114,25 @@ def t0025file(path_f):
 
     return arrayimp00025
 
+def tiempo_optimo():
+    T = 0.02 ** 2 / alpha
+    T_f = (36.5 + 273.15) * k / P
+    T_opt = (50 + 273.15) * k / P
+    t = 0
+    while T_f < T_opt:
+        t += 1E-6
+        T_f = f(0.375, t)
 
-def plot_error(path_f, filename, output_data=False, show=False):
+    return t*T
+
+def plot_error(ratio, metodo, path_f, filename, output_data=False, show=False):
     array_numerico = t0025file(path_f)
-    lista_E_T = [abs(float(array_numerico[i]) - f(i / 100, 0.025) * (P / k) + 273.15) for i in range(101)]
+    if metodo == "explicito":
+        dt = ratio * dz ** 2
+    if metodo == "implicito":
+        dt = ratio * dz
+    M = 0.025 // dt + 1
+    lista_E_T = [abs(float(array_numerico[i]) - f(i / 100, (M - 1) * dt) * (P / k) + 273.15) for i in range(101)]
     plt.figure(figsize=(4, 3))
     plt.scatter(z, lista_E_T, color="royalblue", s=1)
     plt.xlabel("$z$ (cm)")
@@ -131,13 +143,15 @@ def plot_error(path_f, filename, output_data=False, show=False):
     plt.tight_layout()
     plt.legend()
     if output_data:
-        print(f"Media={np.mean(lista_E_T)} K")
-        print("std=", std)
+        print(metodo, " ratio =", ratio, " M =", M, "\n")
+        print(f"Media error = {np.mean(lista_E_T)} K")
+        print("std =", std, " K")
+        print("-" * 20)
     filename += ".png"
     plt.savefig(filename, dpi=300)
     if show:
         plt.show()
-        show = False
+    show = False
 
 
 def plot_analitico(show=False):
@@ -152,7 +166,7 @@ def plot_analitico(show=False):
     plt.savefig("figures/Analítico_ta.png", dpi=300)
     if show:
         plt.show()
-        show = False
+    show = False
 
 
 def ta0025_plot(file, label, figurefilename, show=False, **kwargs):
@@ -174,25 +188,42 @@ def ta0025_plot(file, label, figurefilename, show=False, **kwargs):
     plt.savefig(figurefilename, dpi=300)
     if show:
         plt.show()
+    show = False
 
 
 def tramesa():
-    with open("tramesa/tramesa.txt", "w") as file:
+    with open("tramesa/tramesa_explicit.txt", "w") as file:
         file.write("Explícito 0.25")
         file.write(str(t0025file("data/Ablacio_Explicit_025.txt")))
         array = t0025file("data/Ablacio_Explicit_025.txt")
-        file.write(str([abs(float(array[i]) - f(i / 100, 0.025) * (P / k) + 273.15) for i in range(101)]))
+        file.write(str([abs(float(array[i]) - f(i / 100, (0.025 // (0.25 * dz ** 2) * 0.25 * dz ** 2) * (P / k) +
+                                                273.15)) for i in range(101)]))
         file.write("Explícito 0.49")
         file.write(str(t0025file("data/Ablacio_Explicit_049.txt")))
         array = t0025file("data/Ablacio_Explicit_049.txt")
-        file.write(str([abs(float(array[i]) - f(i / 100, 0.025) * (P / k) + 273.15) for i in range(101)]))
+        file.write(str([abs(float(array[i]) - f(i / 100, (0.025 // (0.49 * dz ** 2) * 0.49 * dz ** 2) * (P / k) +
+                                                273.15)) for i in range(101)]))
         file.write("Explícito 0.51")
         file.write(str(t0025file("data/Ablacio_Explicit_051.txt")))
         array = t0025file("data/Ablacio_Explicit_051.txt")
-        file.write(str([abs(float(array[i]) - f(i / 100, 0.025) * (P / k) + 273.15) for i in range(101)]))
+        file.write(str([abs(float(array[i]) - f(i / 100, (0.025 // (0.51 * dz ** 2) * 0.51 * dz ** 2) * (P / k) +
+                                                273.15)) for i in range(101)]))
+
+    with open("tramesa/tramesa_implicit.txt", "w") as file:
+        file.write("Implícito 0.50")
+        file.write(str(t0025file("data/Ablacio_Implicit050.txt")))
+        array = t0025file("data/Ablacio_Implicit050.txt")
+        file.write(str([abs(float(array[i]) - f(i / 100, (0.025 // (0.5 * dz ** 2) * 0.5 * dz ** 2) * (P / k) +
+                                                273.15)) for i in range(101)]))
+        file.write("Implícito 1.00")
+        file.write(str(t0025file("data/Ablacio_Implicit100.txt")))
+        array = t0025file("data/Ablacio_Implicit100.txt")
+        file.write(str([abs(float(array[i]) - f(i / 100, (0.025 // (1 * dz ** 2) * 1 * dz ** 2) * (P / k) +
+                                                273.15)) for i in range(101)]))
 
 
 # GRAFICA EL ANALÍTICO
+print(f"Tiempo óptimo = {tiempo_optimo()}")
 plot_analitico()
 
 # GRÁFICOS A t_a=0.025 (por defecto solo los guarda, show=True para enseñarlo)
@@ -207,11 +238,20 @@ ta0025_plot(file="data/Ablacio_Implicit050.txt", file2="data/Ablacio_Implicit100
             figurefilename="figures/t_aimp050100.png", show=False)
 
 # GRÁFICOS ERRORES A t_0.025
-plot_error("data/Ablacio_Explicit_025.txt", "figures/Error_T_exp_0.25_ta", output_data=False, show=False)
-plot_error("data/Ablacio_Explicit_049.txt", "figures/Error_T_exp_0.49_ta", output_data=False, show=False)
-plot_error("data/Ablacio_Explicit_051.txt", "figures/Error_T_exp_0.51_ta", output_data=False, show=False)
-plot_error("data/Ablacio_Implicit050.txt", "figures/Error_T_imp_0.50_ta", output_data=False, show=False)
-plot_error("data/Ablacio_Implicit100.txt", "figures/Error_T_imp_1.00_ta", output_data=False, show=False)
+plot_error(0.25, metodo="explicito", path_f="data/Ablacio_Explicit_025.txt", filename="figures/Error_T_exp_0.25_ta",
+           output_data=True, show=False)
+plot_error(0.49, metodo="explicito", path_f="data/Ablacio_Explicit_049.txt", filename="figures/Error_T_exp_0.49_ta",
+           output_data=True, show=False)
+plot_error(0.51, metodo="explicito", path_f="data/Ablacio_Explicit_051.txt", filename="figures/Error_T_exp_0.51_ta",
+           output_data=True, show=False)
+plot_error(0.50, metodo="implicito", path_f="data/Ablacio_Implicit050.txt", filename="figures/Error_T_imp_0.50_ta",
+           output_data=True, show=False)
+plot_error(1, metodo="implicito", path_f="data/Ablacio_Implicit100.txt", filename="figures/Error_T_imp_1.00_ta",
+           output_data=True, show=False)
 
 # GRAFICA EL MEJOR MÉTODO Y SU EVOLUCIÓN TEMPORAL Y EL t_optimo
-plot_resultado("data/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25, show=True)
+plot_resultado("data/Ablacio_Explicit_ResultatFinal.txt", 2000, 101, 0.25, show=False)
+
+# CREA LOS ARCHIVOS REQUERIDOS EN EL APARTADO DE ENVÍO DEL CV
+tramesa()
+

@@ -7,7 +7,7 @@ using namespace std;
 double Tc = 273.15 + 36.5, V = 40, cond = 0.472, k = 0.56, P = cond * pow(V, 2) / 2, alpha = 0.56 / (3683 * 1081);
 int N = 101;
 double dz = 1. / (N - 1);
-double tn = pow(0.02,2) / alpha,  cosa= 0.5*dz;
+double tn = pow(0.02,2) / alpha;
 
 
 double f(double x, double t){
@@ -28,17 +28,18 @@ double analytic_sol(){
     T_opt = (50 + 273.15) * k / P;
     double t = 0;
     while (T_f < T_opt){
-        t += cosa;
+        t += 0.000001;
         T_f = f(0.375,t);
     }
     return t*tn;
 }
 
 
-void explicit_method(double ratio, int M){
+void explicit_method(double ratio, int M, const char *filename){
     double T[M][N];
     double dt = ratio * pow(dz, 2);
-
+    cout << "div  " << int(0.025/dt) + 1 << "\n";
+    cout << "M" << M << "\n";
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
     }
@@ -58,7 +59,7 @@ void explicit_method(double ratio, int M){
 
     FILE* txt;
 
-    txt = fopen("../data/Ablacio_Explicit_ResultatFinal.txt", "w");
+    txt = fopen(filename, "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -72,10 +73,12 @@ void explicit_method(double ratio, int M){
 }
 
 
-void implicit_method(float ratio, int M){
-    double T[M][N];
+void implicit_method(float ratio, int M, const char *filename){
     double gamma =  ratio / dz;
     double dt = ratio * dz;
+    cout << "div  " << int(25/(dt * 1000)) + 1 << "\n";
+    cout << "M" << M << "\n";
+    double T[M][N];
 
     for (int j = 0; j < N; j++){
         T[0][j] = Tc * k / P;
@@ -98,7 +101,7 @@ void implicit_method(float ratio, int M){
     }
 
     FILE* txt;
-    txt = fopen("../data/Ablacio_Implicit100.txt", "w");
+    txt = fopen(filename, "w");
 
     for (int i = 0; i < M; i++){
         for (int j = 0; j < N-1; j++){
@@ -113,10 +116,11 @@ void implicit_method(float ratio, int M){
 
 
 int main(){
-    explicit_method(0.25, 1001);
-    //explicit_method(0.49, 511);
-    //explicit_method(0.51, 492);
-    //implicit_method(0.5, 6);
-    //implicit_method(1, 3);
+    explicit_method(0.25, 1001, "../data/Ablacio_Explicit_025.txt");
+    explicit_method(0.49, 511,"../data/Ablacio_Explicit_049.txt");
+    explicit_method(0.51, 492, "../data/Ablacio_Explicit_51.txt");
+    implicit_method(0.5, 6, "../data/Ablacio_Implicit050.txt");
+    implicit_method(1, 3, "../data/Ablacio_Implicit100.txt");
+    explicit_method(0.25, 2000, "../data/Ablacio_Explicit_ResultatFinal.txt");
     return 0;
 }
